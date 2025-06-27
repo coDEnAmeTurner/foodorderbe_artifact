@@ -4,16 +4,21 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "`dish`")
 public class Dish implements Serializable {
@@ -21,10 +26,10 @@ public class Dish implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "shopId")
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    private Shop shop;
+   @ManyToOne
+   @JoinColumn(name = "shopId")
+   @OnDelete(action = OnDeleteAction.CASCADE)
+   private Shop shop;
 
     @Column(name = "name",nullable = false)
     private String name;
@@ -56,9 +61,9 @@ public class Dish implements Serializable {
         return id;
     }
 
-//    public Shop getShop() {
-//        return shop;
-//    }
+   public Shop getShop() {
+       return shop;
+   }
 
     public String getName() {
         return name;
@@ -96,9 +101,9 @@ public class Dish implements Serializable {
         this.id = id;
     }
 
-//    public void setShop(Shop shop) {
-//        this.shop = shop;
-//    }
+   public void setShop(Shop shop) {
+       this.shop = shop;
+   }
 
     public void setName(String name) {
         this.name = name;
@@ -136,11 +141,11 @@ public class Dish implements Serializable {
     }
 
     public Dish(long id, 
-//    Shop shop,
+   Shop shop,
     String name, float price, String picture, boolean isAvailable, String daySession,
             String description, Date dateCreated, Date dateModified) {
         this.id = id;
-//        this.shop = shop;
+       this.shop = shop;
         this.name = name;
         this.price = price;
         this.picture = picture;

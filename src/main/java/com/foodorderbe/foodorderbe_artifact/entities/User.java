@@ -29,7 +29,7 @@ public class User implements Serializable {
     private boolean isSuperUser;
 
     @Column(name = "userName",nullable = false, unique = true)
-    private boolean userName;
+    private String userName;
     
     @Column(name = "firstName",nullable = false, columnDefinition = "varchar(150) default ''")
     private String firstName;
@@ -73,7 +73,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Long id, String password, Date lastLogin, boolean isSuperUser, boolean userName, String firstName,
+    public User(Long id, String password, Date lastLogin, boolean isSuperUser, String userName, String firstName,
             String lastName, String email, boolean isStaff, boolean isActive, Date dateJoined, String avatar,
             String name, String phone, String type, Date dateCreated, Date dateModified) {
         this.id = id;
@@ -127,11 +127,11 @@ public class User implements Serializable {
         this.isSuperUser = isSuperUser;
     }
 
-    public boolean isUserName() {
+    public String isUserName() {
         return userName;
     }
 
-    public void setUserName(boolean userName) {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 

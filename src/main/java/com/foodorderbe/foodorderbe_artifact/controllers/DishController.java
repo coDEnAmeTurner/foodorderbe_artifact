@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.foodorderbe.foodorderbe_artifact.entities.Dish;
 import com.foodorderbe.foodorderbe_artifact.entities.User;
-import com.foodorderbe.foodorderbe_artifact.services.DishService;
+import com.foodorderbe.foodorderbe_artifact.services.service_implements.DishServiceImpl;
 
 @RestController
 @RequestMapping(path = "/Dishs")
 public class DishController {
     
     @Autowired
-    private DishService dishService;
+    private DishServiceImpl dishService;
 
     @GetMapping(path = "")
     public @ResponseBody List<Dish> getAllDishs() {
@@ -25,7 +25,7 @@ public class DishController {
     }
 
     @GetMapping(path = "/{id}/getUser")
-    public @ResponseBody User getFirstDishUser(@PathVariable(name = "id") Long dishId) {
+    public @ResponseBody User getDishUser(@PathVariable(name = "id") Long dishId) {
         return dishService.getDishUser(dishId);
     }
 }

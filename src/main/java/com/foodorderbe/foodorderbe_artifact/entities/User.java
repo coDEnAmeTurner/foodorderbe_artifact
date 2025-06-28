@@ -3,6 +3,10 @@ package com.foodorderbe.foodorderbe_artifact.entities;
 import java.io.Serializable;
 import java.util.Date;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "`user`")
@@ -66,16 +71,28 @@ public class User implements Serializable {
     @Column(name = "dateCreated", nullable = false)
     private Date dateCreated;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     @Column(name = "dateModified", nullable = false)
     private Date dateModified;
+
+    @JsonIgnore
+    @Transient
+    private MultipartFile file;
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
 
     public User() {
     }
 
     public User(Long id, String password, Date lastLogin, boolean isSuperUser, String userName, String firstName,
             String lastName, String email, boolean isStaff, boolean isActive, Date dateJoined, String avatar,
-            String name, String phone, String type, Date dateCreated, Date dateModified) {
+            String name, String phone, String type, Date dateCreated, Date dateModified,MultipartFile file) {
         this.id = id;
         this.password = password;
         this.lastLogin = lastLogin;
@@ -93,6 +110,7 @@ public class User implements Serializable {
         this.type = type;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
+        this.file = file;
     }
 
     public Long getId() {

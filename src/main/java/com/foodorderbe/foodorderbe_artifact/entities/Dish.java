@@ -2,21 +2,22 @@ package com.foodorderbe.foodorderbe_artifact.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,10 +27,10 @@ public class Dish implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-   @ManyToOne
-   @JoinColumn(name = "shopId")
-   @OnDelete(action = OnDeleteAction.CASCADE)
-   private Shop shop;
+    @ManyToOne
+    @JoinColumn(name = "shopId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Shop shop;
 
     @Column(name = "name",nullable = false)
     private String name;
@@ -40,8 +41,8 @@ public class Dish implements Serializable {
     @Column(name = "picture",nullable = false, columnDefinition = "text")
     private String picture;
 
-    @Column(name = "isAvailable",nullable = false, columnDefinition = "tinyint(1) default 1")
-    private boolean isAvailable;
+    @Column(name = "available",nullable = false, columnDefinition = "tinyint(1) default 1")
+    private boolean available;
 
     @Column(name = "daySession",nullable = true, columnDefinition = "varchar(10) default ''")
     private String daySession;
@@ -56,6 +57,10 @@ public class Dish implements Serializable {
     @CreationTimestamp
     @Column(name = "dateModified", nullable = false)
     private Date dateModified;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "dish")
+    private Set<Comment> comments;
 
     public long getId() {
         return id;
@@ -78,7 +83,7 @@ public class Dish implements Serializable {
     }
 
     public boolean isAvailable() {
-        return isAvailable;
+        return available;
     }
 
     public String getDaySession() {
@@ -117,8 +122,8 @@ public class Dish implements Serializable {
         this.picture = picture;
     }
 
-    public void setAvailable(boolean isAvailable) {
-        this.isAvailable = isAvailable;
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
     public void setDaySession(String daySession) {
@@ -142,14 +147,14 @@ public class Dish implements Serializable {
 
     public Dish(long id, 
    Shop shop,
-    String name, float price, String picture, boolean isAvailable, String daySession,
+    String name, float price, String picture, boolean available, String daySession,
             String description, Date dateCreated, Date dateModified) {
         this.id = id;
        this.shop = shop;
         this.name = name;
         this.price = price;
         this.picture = picture;
-        this.isAvailable = isAvailable;
+        this.available = available;
         this.daySession = daySession;
         this.description = description;
         this.dateCreated = dateCreated;

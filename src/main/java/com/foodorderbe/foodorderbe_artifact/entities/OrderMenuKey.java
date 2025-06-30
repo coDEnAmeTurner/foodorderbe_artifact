@@ -38,5 +38,36 @@ public class OrderMenuKey implements Serializable{
         this.menuId = menuId;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((orderId == null) ? 0 : orderId.hashCode());
+        result = prime * result + ((menuId == null) ? 0 : menuId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        OrderMenuKey other = (OrderMenuKey) obj;
+        if (orderId == null) {
+            if (other.orderId != null)
+                return false;
+        } else if (!orderId.equals(other.orderId))
+            return false;
+        if (menuId == null) {
+            if (other.menuId != null)
+                return false;
+        } else if (!menuId.equals(other.menuId))
+            return false;
+        return true;
+    }
+
     
 }

@@ -11,6 +11,7 @@ public interface MenuService {
     Menu destroyMenu(Long menuId);
 
     Menu createOrUpdateMenu(
+            Long menuId,
             String name,
             Long shopId,
             List<DishMenuCreateReq> dishs);

@@ -8,10 +8,10 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class MenuDishKey implements Serializable {
     @Column(name = "menuId")
-    public Long menuId;
+    private Long menuId;
 
     @Column(name = "dishId")
-    public Long dishId;
+    private Long dishId;
 
     public Long getMenuId() {
         return menuId;

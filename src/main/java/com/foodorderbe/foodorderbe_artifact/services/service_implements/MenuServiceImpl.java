@@ -1,8 +1,10 @@
 package com.foodorderbe.foodorderbe_artifact.services.service_implements;
 
+import java.lang.module.Configuration;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.foodorderbe.foodorderbe_artifact.entities.Menu;
 import com.foodorderbe.foodorderbe_artifact.entities.MenuDish;
@@ -14,6 +16,7 @@ import com.foodorderbe.foodorderbe_artifact.requests.DishMenuCreateReq;
 import com.foodorderbe.foodorderbe_artifact.services.service_interfaces.MenuService;
 import com.foodorderbe.foodorderbe_artifact.specifications.MenuSpecs;
 
+@Service
 public class MenuServiceImpl implements MenuService {
     @Autowired
     private MenuRepository menuRepository;
@@ -51,7 +54,8 @@ public class MenuServiceImpl implements MenuService {
         menuRepository.save(m);
 
         if (menuId != 0)
-            // menuDishRepository.
+            menuDishRepository.deleteAllByMenu(menuId);
+
         dishs.forEach(obj->{
             MenuDish menuDish = new MenuDish();
             menuDish.setCount(obj.getCount());

@@ -1,5 +1,7 @@
 package com.foodorderbe.foodorderbe_artifact.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,25 +29,19 @@ public class MenuController {
     @Autowired
     private MenuService menuService;
 
-    // @PostMapping(path = "/", consumes = {
-    //         MediaType.APPLICATION_JSON_VALUE,
-    //         MediaType.MULTIPART_FORM_DATA_VALUE
-    // }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    // @PutMapping(path = "/{id}", consumes = {
-    //         MediaType.APPLICATION_JSON_VALUE,
-    //         MediaType.MULTIPART_FORM_DATA_VALUE
-    // }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    // @ResponseStatus(HttpStatus.CREATED)
-    // @CrossOrigin
-    // public ResponseEntity<Menu> createOrUpdateMenu(@PathVariable(name = "id", required = false) Long menuId,
-    //         @RequestBody MenuCreateReq req) {
-    //     var dish = menuService.createOrUpdateMenu(dishId,
-    //             req.getDescription(),
-    //             req.getDaySession(),
-    //             req.isAvailable(),
-    //             req.getPrice(),
-    //             req.getName(),
-    //             file[0]);
-    //     return new ResponseEntity<>(dish, HttpStatus.CREATED);
-    // }
+    @PostMapping(path = "/", consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE
+    }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @PutMapping(path = "/{id}", consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE
+    }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin
+    public ResponseEntity<Menu> createOrUpdateMenu(@PathVariable(name = "id") Optional<Long> menuId,
+            @RequestBody MenuCreateReq req) {
+        var menu = menuService.createOrUpdateMenu(menuId.isPresent()?menuId.get():0, req.getName(), req.getShopId(), req.getDishs());
+        return new ResponseEntity<>(menu, HttpStatus.CREATED);
+    }
 }

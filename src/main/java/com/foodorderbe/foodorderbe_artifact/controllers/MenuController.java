@@ -29,18 +29,17 @@ public class MenuController {
     @Autowired
     private MenuService menuService;
 
-    @PostMapping(path = "/", consumes = {
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.MULTIPART_FORM_DATA_VALUE
-    }, produces = { MediaType.APPLICATION_JSON_VALUE })
     @PutMapping(path = "/{id}", consumes = {
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.MULTIPART_FORM_DATA_VALUE
+            MediaType.APPLICATION_JSON_VALUE
+    }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @PostMapping(path = "/", consumes = {
+            MediaType.APPLICATION_JSON_VALUE
     }, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseStatus(HttpStatus.CREATED)
     @CrossOrigin
     public ResponseEntity<Menu> createOrUpdateMenu(@PathVariable(name = "id") Optional<Long> menuId,
             @RequestBody MenuCreateReq req) {
+                System.out.println(menuId.get());
         var menu = menuService.createOrUpdateMenu(menuId.isPresent()?menuId.get():0, req.getName(), req.getShopId(), req.getDishs());
         return new ResponseEntity<>(menu, HttpStatus.CREATED);
     }

@@ -1,6 +1,7 @@
 package com.foodorderbe.foodorderbe_artifact.services.service_implements;
 
 import java.lang.module.Configuration;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.foodorderbe.foodorderbe_artifact.entities.Menu;
 import com.foodorderbe.foodorderbe_artifact.entities.MenuDish;
+import com.foodorderbe.foodorderbe_artifact.entities.MenuDishKey;
 import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.DishRepository;
 import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.MenuDishRepository;
 import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.MenuRepository;
@@ -29,14 +31,14 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<Menu> getAllMenus(Long shopId, String name) {
-        return menuRepository.findAll(MenuSpecs.containsName(name).and(MenuSpecs.isOfShop(shopId))); 
+        return menuRepository.findAll(MenuSpecs.containsName(name).and(MenuSpecs.isOfShop(shopId)));
     }
 
     @Override
     public Menu destroyMenu(Long menuId) {
         var menu = menuRepository.findById(menuId);
         if (!menu.isPresent())
-        return null;
+            return null;
 
         menuRepository.deleteById(menuId);
         return menu.get();
@@ -46,21 +48,28 @@ public class MenuServiceImpl implements MenuService {
     public Menu createOrUpdateMenu(Long menuId, String name, Long shopId, List<DishMenuCreateReq> dishs) {
         Menu m;
         if (menuId == 0)
-            m  = new Menu();
-        else 
+            m = new Menu();
+        else
             m = menuRepository.findById(menuId).get();
         m.setName(name);
         m.setShop(shopRepository.findById(shopId).get());
         menuRepository.save(m);
 
-        if (menuId != 0)
-            menuDishRepository.deleteAllByMenu(menuId);
+        if (menuId != 0) {
+            menuDishRepository.customDeleteAllByMenuId(menuId);
+        }
 
-        dishs.forEach(obj->{
+        dishs.forEach(obj -> {
             MenuDish menuDish = new MenuDish();
             menuDish.setCount(obj.getCount());
+            MenuDishKey key = new MenuDishKey();
+            key.setDishId(obj.getDishId());
+            key.setMenuId(m.getId());
+            menuDish.setId(key);
             menuDish.setMenu(m);
-            menuDish.setDish(dishRepository.findById(shopId).get());
+            menuDish.setDish(dishRepository.findById(obj.getDishId()).get());
+            menuDish.setDateModified(new Date());
+            menuDish.setDateCreated(new Date());
             menuDishRepository.save(menuDish);
         });
         return m;
@@ -71,5 +80,5 @@ public class MenuServiceImpl implements MenuService {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getMenu'");
     }
-    
+
 }

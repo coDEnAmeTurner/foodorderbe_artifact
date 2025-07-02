@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -37,7 +38,7 @@ public class MenuDish implements Serializable {
     @Column(name = "dateCreated", nullable = false)
     private Date dateCreated;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     @Column(name = "dateModified", nullable = false)
     private Date dateModified;
 
@@ -101,5 +102,4 @@ public class MenuDish implements Serializable {
         this.dateModified = dateModified;
     }
 
-    
 }

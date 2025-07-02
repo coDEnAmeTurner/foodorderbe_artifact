@@ -65,4 +65,9 @@ public class UserServiceImpl implements UserService {
         //come back later for spring security
         return null;
     }
+
+    @Override
+    public User getUser(Long userId) {
+        return userRepository.findById(userId).get();
+    }
 }

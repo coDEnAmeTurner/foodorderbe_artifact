@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -72,14 +73,10 @@ public class DishController {
         return new ResponseEntity<>(dishService.getDish(dishId), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/", consumes = {
+    @RequestMapping(value = {"/", "/{id}"}, consumes = {
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.MULTIPART_FORM_DATA_VALUE
-    }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    @PutMapping(path = "/{id}", consumes = {
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.MULTIPART_FORM_DATA_VALUE
-    }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    }, produces = { MediaType.APPLICATION_JSON_VALUE }, method = {RequestMethod.PUT, RequestMethod.POST})
     @ResponseStatus(HttpStatus.CREATED)
     @CrossOrigin
     public ResponseEntity<Dish> createOrUpdateDish(@PathVariable(name = "id", required = false) Long dishId,

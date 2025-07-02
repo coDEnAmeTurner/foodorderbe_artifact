@@ -1,12 +1,12 @@
 package com.foodorderbe.foodorderbe_artifact.services.service_implements;
 
-import java.lang.module.Configuration;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.foodorderbe.foodorderbe_artifact.entities.Dish;
 import com.foodorderbe.foodorderbe_artifact.entities.Menu;
 import com.foodorderbe.foodorderbe_artifact.entities.MenuDish;
 import com.foodorderbe.foodorderbe_artifact.entities.MenuDishKey;
@@ -51,8 +51,10 @@ public class MenuServiceImpl implements MenuService {
             m = new Menu();
         else
             m = menuRepository.findById(menuId).get();
-        m.setName(name);
-        m.setShop(shopRepository.findById(shopId).get());
+        if (!name.isEmpty())
+            m.setName(name);
+        if (shopId != 0)
+            m.setShop(shopRepository.findById(shopId).get());
         menuRepository.save(m);
 
         if (menuId != 0) {
@@ -61,24 +63,34 @@ public class MenuServiceImpl implements MenuService {
 
         dishs.forEach(obj -> {
             MenuDish menuDish = new MenuDish();
-            menuDish.setCount(obj.getCount());
-            MenuDishKey key = new MenuDishKey();
-            key.setDishId(obj.getDishId());
-            key.setMenuId(m.getId());
-            menuDish.setId(key);
-            menuDish.setMenu(m);
-            menuDish.setDish(dishRepository.findById(obj.getDishId()).get());
-            menuDish.setDateModified(new Date());
-            menuDish.setDateCreated(new Date());
-            menuDishRepository.save(menuDish);
+            if (obj.getCount() != 0)
+                menuDish.setCount(obj.getCount());
+            if (obj.getDishId() != 0) {
+                MenuDishKey key = new MenuDishKey();
+                key.setDishId(obj.getDishId());
+                key.setMenuId(m.getId());
+                menuDish.setId(key);
+                menuDish.setMenu(m);
+                menuDish.setDish(dishRepository.findById(obj.getDishId()).get());
+                menuDish.setDateModified(new Date());
+                menuDish.setDateCreated(new Date());
+                menuDishRepository.save(menuDish);
+            }
         });
         return m;
     }
 
     @Override
-    public Menu getMenu(Long menuId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMenu'");
+    public Menu getMenuById(Long menuId) {
+        return menuRepository.findById(menuId).get();
+    }
+
+    @Override
+    public Dish removeDish(Long menuId, Long dishId) {
+        var opDish = dishRepository.findById(dishId);
+
+        menuDishRepository.deleteById(new MenuDishKey(menuId, dishId));
+        return opDish.get();
     }
 
 }

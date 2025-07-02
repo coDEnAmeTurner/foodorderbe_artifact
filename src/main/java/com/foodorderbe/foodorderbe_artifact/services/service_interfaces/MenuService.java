@@ -2,6 +2,7 @@ package com.foodorderbe.foodorderbe_artifact.services.service_interfaces;
 
 import java.util.List;
 
+import com.foodorderbe.foodorderbe_artifact.entities.Dish;
 import com.foodorderbe.foodorderbe_artifact.entities.Menu;
 import com.foodorderbe.foodorderbe_artifact.requests.DishMenuCreateReq;
 
@@ -16,5 +17,7 @@ public interface MenuService {
             Long shopId,
             List<DishMenuCreateReq> dishs);
 
-    Menu getMenu(Long menuId);
+    Menu getMenuById(Long menuId);
+
+    Dish removeDish(Long menuId, Long dishId);
 }

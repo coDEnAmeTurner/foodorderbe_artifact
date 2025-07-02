@@ -3,8 +3,8 @@ package com.foodorderbe.foodorderbe_artifact.requests;
 import java.util.List;
 
 public class MenuCreateReq {
-    private String name;
-    private Long shopId;
+    private String name = "";
+    private Long shopId = 0L;
     private List<DishMenuCreateReq> dishs;
     public String getName() {
         return name;

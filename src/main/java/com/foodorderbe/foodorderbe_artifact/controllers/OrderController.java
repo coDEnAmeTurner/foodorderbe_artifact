@@ -1,0 +1,75 @@
+package com.foodorderbe.foodorderbe_artifact.controllers;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.foodorderbe.foodorderbe_artifact.entities.Order;
+import com.foodorderbe.foodorderbe_artifact.entities.User;
+import com.foodorderbe.foodorderbe_artifact.requests.OrderCreateOrUpdateReq;
+import com.foodorderbe.foodorderbe_artifact.services.service_interfaces.OrderService;
+import com.foodorderbe.foodorderbe_artifact.services.service_interfaces.UserService;
+
+@Controller
+@RequestMapping(path = "/Orders")
+public class OrderController {
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private UserService userService;
+
+    @RequestMapping(value = {"/Dishs/", "/{id}/Dishs/"}, method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH})
+    @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin
+    public ResponseEntity<Order> createOrUpdateOrderDishs(@PathVariable(name = "id") Optional<Long> orderId, @RequestBody OrderCreateOrUpdateReq req) {
+        //userid should be from jwt token
+        User user = userService.getUser(1L);
+        var order = orderService.createOrUpdateOrderDishs( orderId.isPresent()?orderId.get():0, user, req.getItems(),req.getPurchaseType(), req.getShipAddress());
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = {"/Menus/", "/{id}/Menus/"}, method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.PATCH})
+    @ResponseStatus(HttpStatus.CREATED)
+    @CrossOrigin
+    public ResponseEntity<Order> createOrUpdateOrderMenus(@PathVariable(name = "id") Optional<Long> orderId, @RequestBody OrderCreateOrUpdateReq req) {
+        //userid should be from jwt token
+        var order = orderService.createOrUpdateOrderMenus(orderId.isPresent()?orderId.get():0,userService.getUser(1L), req.getItems(),req.getPurchaseType(), req.getShipAddress());
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
+    }
+    
+    @DeleteMapping(path =  "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CrossOrigin
+    public ResponseEntity deleteOrder(@PathVariable(name = "id") Long orderId) {
+        orderService.deleteOrder(orderId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping(path =  "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin
+    public ResponseEntity<Order> getOrder(@PathVariable(name = "id") Long orderId) {
+        var order = orderService.getOrder(orderId);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @PatchMapping(path =  "/{id}/verify")
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin
+    public ResponseEntity<Order> verifyOrder(@PathVariable(name = "id") Long orderId) {
+        var order = orderService.verifyOrder(orderId);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+}

@@ -17,4 +17,6 @@ public interface UserService extends UserDetailsService {
             String name,
             MultipartFile file
             );
+
+    User getUser(Long userId);
 }

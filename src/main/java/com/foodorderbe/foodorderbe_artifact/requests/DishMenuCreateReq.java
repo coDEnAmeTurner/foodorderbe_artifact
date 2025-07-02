@@ -1,8 +1,8 @@
 package com.foodorderbe.foodorderbe_artifact.requests;
 
 public class DishMenuCreateReq {
-    private Long dishId;
-    private int count;
+    private Long dishId = 0L;
+    private int count = 0;
     public Long getDishId() {
         return dishId;
     }

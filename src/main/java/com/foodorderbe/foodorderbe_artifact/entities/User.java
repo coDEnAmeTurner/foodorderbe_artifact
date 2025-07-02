@@ -145,7 +145,7 @@ public class User implements Serializable {
         this.isSuperUser = isSuperUser;
     }
 
-    public String isUserName() {
+    public String getUserName() {
         return userName;
     }
 

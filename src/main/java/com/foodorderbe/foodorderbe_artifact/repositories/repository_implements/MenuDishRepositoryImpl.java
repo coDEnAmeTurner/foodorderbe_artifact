@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import com.foodorderbe.foodorderbe_artifact.entities.MenuDish;
 import com.foodorderbe.foodorderbe_artifact.entities.MenuDishKey;
-import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.CustomMenuDishRepository;
 import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.MenuRepository;
+import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.custom_repositories.CustomMenuDishRepository;
 
 import jakarta.transaction.Transactional;
 

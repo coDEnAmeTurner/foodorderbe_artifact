@@ -80,20 +80,16 @@
 			<artifactId>cloudinary-http44</artifactId>
 			<version>1.29.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-jpamodelgen</artifactId>
+			<version>6.1.7.Final</version>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<compilerArguments>
-						<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
-					</compilerArguments>
-				</configuration>
-			</plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

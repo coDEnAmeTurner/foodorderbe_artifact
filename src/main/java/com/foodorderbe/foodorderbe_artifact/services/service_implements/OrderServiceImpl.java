@@ -1,6 +1,7 @@
 package com.foodorderbe.foodorderbe_artifact.services.service_implements;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import com.foodorderbe.foodorderbe_artifact.entities.OrderDishKey;
 import com.foodorderbe.foodorderbe_artifact.entities.OrderMenu;
 import com.foodorderbe.foodorderbe_artifact.entities.OrderMenuKey;
 import com.foodorderbe.foodorderbe_artifact.entities.User;
+import com.foodorderbe.foodorderbe_artifact.exceptions.OrderNotFoundException;
 import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.DishRepository;
 import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.MenuRepository;
 import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.OrderDishRepository;
@@ -36,43 +38,57 @@ public class OrderServiceImpl implements OrderService {
     private OrderMenuRepository orderMenuRepository;
 
     @Override
-    public Order createOrUpdateOrderDishs(Long orderId, User user, List<ItemOrderCreateOrUpdateReq> items, String purchaseType,
+    public Order createOrUpdateOrderDishs(Long orderId, User user, List<ItemOrderCreateOrUpdateReq> items,
+            String purchaseType,
             String shipAddress) {
         Order order;
-        if (orderId != 0)
-            order = orderRepository.findById(orderId).get();
-        else
-            order = new Order();
+        try {
+            if (orderId != 0)
+                order = orderRepository.findById(orderId).get();
+            else
+                order = new Order();
+
+        } catch (NoSuchElementException ex) {
+            throw new OrderNotFoundException("OrderId not found!");
+        }
         order.setUser(user);
-        order.setPaymentType(purchaseType);
-        order.setShipAddress(shipAddress);
+        if (!purchaseType.isEmpty())
+            order.setPaymentType(purchaseType);
+        if (!shipAddress.isEmpty())
+            order.setShipAddress(shipAddress);
         orderRepository.save(order);
 
         if (orderId != 0)
             orderDishRepository.deleteOrderDishByOrderId(orderId);
 
-        items.forEach(item -> {
-            OrderDish orderDish = new OrderDish();
-            OrderDishKey key = new OrderDishKey();
-            key.setDishId(item.getItemId());
-            key.setOrderId(order.getId());
-            orderDish.setId(key);
+        if (!items.isEmpty())
+            items.forEach(item -> {
+                OrderDish orderDish = new OrderDish();
+                OrderDishKey key = new OrderDishKey();
+                key.setDishId(item.getItemId());
+                key.setOrderId(order.getId());
+                orderDish.setId(key);
 
-            Dish d = dishRepository.findById(item.getItemId()).get();
-            orderDish.setDish(d);
-            orderDish.setOrder(order);
+                try {
 
-            orderDish.setCount(item.getCount());
-            orderDish.setSideNote(item.getNote());
-            orderDishRepository.save(orderDish);
+                    Dish d = dishRepository.findById(item.getItemId()).get();
+                    orderDish.setDish(d);
+                    orderDish.setOrder(order);
 
-        });
-
+                    orderDish.setCount(item.getCount());
+                    orderDish.setSideNote(item.getNote());
+                    orderDishRepository.save(orderDish);
+                } catch (NoSuchElementException e) {
+                    throw new OrderNotFoundException(String.format("Dish id %d not found", item.getItemId()));
+                }
+            });
+        
         return order;
     }
 
     @Override
-    public Order createOrUpdateOrderMenus(Long orderId, User user, List<ItemOrderCreateOrUpdateReq> items, String purchaseType,
+    public Order createOrUpdateOrderMenus(Long orderId, User user, List<ItemOrderCreateOrUpdateReq> items,
+            String purchaseType,
             String shipAddress) {
         Order order;
         if (orderId != 0)
@@ -104,6 +120,10 @@ public class OrderServiceImpl implements OrderService {
 
         });
 
+        var total = orderRepository.calculateTotalPriceByOrderId(order);
+        order.setTotalPrice((float)total);
+        orderRepository.save(order);
+        
         return order;
     }
 
@@ -125,5 +145,11 @@ public class OrderServiceImpl implements OrderService {
         order.setValid(true);
         orderRepository.save(order);
         return order;
+    }
+
+    @Override
+    public double calculateTotalPriceByOrderId(Long orderId) {
+        var order =  orderRepository.findById(orderId).get();   
+        return orderRepository.calculateTotalPriceByOrderId(order);
     }
 }

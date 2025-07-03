@@ -27,4 +27,5 @@ public interface OrderService {
     void deleteOrder(Long orderId);
     Order getOrder(Long orderId);
     Order verifyOrder(Long orderId);
+    double calculateTotalPriceByOrderId(Long orderId);
 } 

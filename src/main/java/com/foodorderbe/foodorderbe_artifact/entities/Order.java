@@ -2,10 +2,13 @@ package com.foodorderbe.foodorderbe_artifact.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -49,6 +53,29 @@ public class Order implements Serializable {
     @CreationTimestamp
     @Column(name = "dateModified", nullable = false)
     private Date dateModified;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "order")
+    private Set<OrderDish> orderDishs;
+
+    @Column(name = "shipPayment", nullable = true)
+    private float shipPayment;
+
+    public float getShipPayment() {
+        return shipPayment;
+    }
+
+    public void setShipPayment(float shipPayment) {
+        this.shipPayment = shipPayment;
+    }
+
+    public Set<OrderDish> getOrderDishs() {
+        return orderDishs;
+    }
+
+    public void setOrderDishs(Set<OrderDish> orderDishs) {
+        this.orderDishs = orderDishs;
+    }
 
     public Long getId() {
         return id;
@@ -115,7 +142,7 @@ public class Order implements Serializable {
     }
 
     public Order(Long id, User user, boolean isValid, String paymentType, float totalPrice, String shipAddress,
-            Date dateCreated, Date dateModified) {
+            Date dateCreated, Date dateModified, float shipPayment) {
         this.id = id;
         this.user = user;
         this.isValid = isValid;
@@ -124,6 +151,7 @@ public class Order implements Serializable {
         this.shipAddress = shipAddress;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
+        this.shipPayment = shipPayment;
     }
 
     public Order() {

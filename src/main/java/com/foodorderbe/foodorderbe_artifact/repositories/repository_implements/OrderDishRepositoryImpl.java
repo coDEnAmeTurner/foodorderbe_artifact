@@ -5,7 +5,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 
 import com.foodorderbe.foodorderbe_artifact.entities.OrderDish;
-import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.CustomOrderDishRepository;
+import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.custom_repositories.CustomOrderDishRepository;
 
 import jakarta.transaction.Transactional;
 

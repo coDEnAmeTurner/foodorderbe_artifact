@@ -9,6 +9,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.foodorderbe.foodorderbe_artifact.constraints.annotations.CheckPurchaseType;
+import com.foodorderbe.foodorderbe_artifact.constraints.constraint_utils.PurchaseType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

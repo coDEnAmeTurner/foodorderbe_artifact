@@ -45,9 +45,7 @@ public class DishServiceImpl implements DishService {
                         .isOfShop(shopId)
                         .and(DishSpecs.containsName(name))
                         .and(DishSpecs.fromToPrice(fromPrice, toPrice))
-                        .and(
-                            DishSpecs.isAvailable(available)
-                            )
+                        .and(DishSpecs.isAvailable(available))
                         .and(DishSpecs.equalsDaySession(daySession))
                         );
     }

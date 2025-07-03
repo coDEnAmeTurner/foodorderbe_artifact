@@ -5,6 +5,7 @@ public class CommentCreateOrUpdateReq {
     private Long parentId = 0L;
     private Long dishId = 0L;
     private Long shopId = 0L;
+
     public String getContent() {
         return content;
     }

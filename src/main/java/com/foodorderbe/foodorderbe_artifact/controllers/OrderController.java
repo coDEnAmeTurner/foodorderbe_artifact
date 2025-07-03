@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,6 +34,7 @@ import com.foodorderbe.foodorderbe_artifact.services.service_interfaces.UserServ
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping(path = "/Orders")
@@ -56,12 +58,26 @@ public class OrderController {
         return resp;
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    public ResponseEntity< Map<String, String>> reqViolation(HttpServletRequest req, Exception ex) {
+        var map = new HashMap<String,String>();
+        var resp = new ResponseEntity<Map<String,String>>(map,HttpStatus.BAD_REQUEST);
+
+        if (ex instanceof MethodArgumentNotValidException) {
+            map.put("msg", ex.getMessage());
+            return resp;
+        }
+        map.put("msg","Your request is tampered!");
+        return resp;
+    }
+
     @RequestMapping(value = { "/Dishs/", "/{id}/Dishs/" }, method = { RequestMethod.POST, RequestMethod.PUT,
             RequestMethod.PATCH })
     @ResponseStatus(HttpStatus.CREATED)
     @CrossOrigin
     public ResponseEntity<Order> createOrUpdateOrderDishs(@PathVariable(name = "id") Optional<Long> orderId,
-            @RequestBody OrderCreateOrUpdateReq req) {
+            @RequestBody @Valid OrderCreateOrUpdateReq req) {
         // userid should be from jwt token
         User user = userService.getUser(1L);
         var order = orderService.createOrUpdateOrderDishs(orderId.isPresent() ? orderId.get() : 0, user, req.getItems(),

@@ -3,9 +3,21 @@ package com.foodorderbe.foodorderbe_artifact.requests;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.foodorderbe.foodorderbe_artifact.constraints.annotations.CheckPurchaseType;
+import com.foodorderbe.foodorderbe_artifact.constraints.constraint_utils.PurchaseType;
+
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+@ValidatorValues
 public class OrderCreateOrUpdateReq {
     private List<ItemOrderCreateOrUpdateReq> items = new ArrayList<>();
+    @NotNull
+    @CheckPurchaseType({PurchaseType.MOMO, PurchaseType.CASH, PurchaseType.VNPAY})
     private String purchaseType = "";
+    @NotNull
+    @Size(min = 10, max = 200)
     private String shipAddress = "";
     public List<ItemOrderCreateOrUpdateReq> getItems() {
         return items;

@@ -48,7 +48,9 @@ public class CommentServiceImpl implements CommentService {
         if (shopId != 0)
             comment.setShop(shopRepository.findById(shopId).get());
 
-        comment.setContent(content);
+        if (!content.isEmpty())
+            comment.setContent(content);
+
         comment.setUser(user);
         commentRepository.save(comment);
 

@@ -62,8 +62,8 @@ public class UserServiceImpl implements UserService {
         if (u == null) {
             throw new UsernameNotFoundException("Invalid username!");
         }
-        //come back later for spring security
-        return null;
+        
+        return u;
     }
 
     @Override

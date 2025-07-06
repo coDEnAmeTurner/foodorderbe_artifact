@@ -1,9 +1,13 @@
 package com.foodorderbe.foodorderbe_artifact.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,12 +22,13 @@ import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "`user`")
-public class User implements Serializable {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
+    @JsonIgnore
     @Column(name="password", nullable = false)
     private String password;
 
@@ -247,5 +252,18 @@ public class User implements Serializable {
 
     public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Authority authority = new Authority(getType());
+        var list = new ArrayList<GrantedAuthority>();
+        list.add(authority);
+        return list;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.getUserName();
     }
 }

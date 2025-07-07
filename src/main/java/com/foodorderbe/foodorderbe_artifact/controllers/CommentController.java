@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.foodorderbe.foodorderbe_artifact.entities.Comment;
 import com.foodorderbe.foodorderbe_artifact.entities.User;
@@ -23,7 +24,7 @@ import com.foodorderbe.foodorderbe_artifact.requests.CommentCreateOrUpdateReq;
 import com.foodorderbe.foodorderbe_artifact.services.service_interfaces.CommentService;
 import com.foodorderbe.foodorderbe_artifact.services.service_interfaces.UserService;
 
-@Controller
+@RestController
 @RequestMapping("/Comments")
 public class CommentController {
     @Autowired

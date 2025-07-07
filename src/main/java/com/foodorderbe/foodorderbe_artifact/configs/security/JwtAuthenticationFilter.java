@@ -2,7 +2,9 @@ package com.foodorderbe.foodorderbe_artifact.configs.security;
 
 import java.io.IOException;
 
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
@@ -13,21 +15,32 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private AuthenticationManager authenticationManager;
 
-    // This class will be used to intercept requests and check for JWT tokens
-    // in the Authorization header.
-    // If a valid token is found, it will set the authentication in the security context.
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+        super();
+        this.authenticationManager = authenticationManager;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
 
-        Authentication tokenAuthentication = new BearerTokenAuthenticationToken(request.getHeader("Authorization").substring(7));
-        
+        String authorization = request.getHeader("Authorization");
 
-        // Implement JWT validation logic here
-        filterChain.doFilter(request, response);
+        if (authorization != null) {
+            Authentication tokenAuthentication = new BearerTokenAuthenticationToken(authorization.substring(7));
+            Authentication processedAuthentication = authenticationManager.authenticate(tokenAuthentication);
+            if (processedAuthentication.isAuthenticated()) {
+                SecurityContextHolder.getContext().setAuthentication(processedAuthentication);
+            }
+            filterChain.doFilter(request, response);
+        } else {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
     }
-    
+
 }

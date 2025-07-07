@@ -1,5 +1,6 @@
 package com.foodorderbe.foodorderbe_artifact.configs.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,10 +17,15 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+
+import com.foodorderbe.foodorderbe_artifact.services.service_implements.UserServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
@@ -28,22 +34,26 @@ public class WebSecurityConfig {
                                                 .requestMatchers("/Users/login").permitAll() // allow flow to login api
                                                                                              // without authentication
                                                                                              // and authorization
-                                                .anyRequest().authenticated());
+                                                .anyRequest().authenticated())
+                                .addFilterBefore(new JwtAuthenticationFilter(jwtAuthenticationManager()),
+                                                UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();
         }
 
         @Bean
-        public AuthenticationManager authenticationManager(
-                        UserDetailsService userDetailsService,
-                        PasswordEncoder passwordEncoder) {
-                DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
-                authenticationProvider.setPasswordEncoder(passwordEncoder);
+        public AuthenticationManager daoAuthenticationManager() {
+                DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(new UserServiceImpl());
+                authenticationProvider.setPasswordEncoder(passwordEncoder());
 
+                return new ProviderManager(authenticationProvider);
+        }
+
+        public AuthenticationManager jwtAuthenticationManager() {
                 JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(jwtDecoder());
                 jwtAuthenticationProvider.setJwtAuthenticationConverter(new JwtAuthenticationConverter());
 
-                return new ProviderManager(authenticationProvider);
+                return new ProviderManager(jwtAuthenticationProvider);
         }
 
         @Bean
@@ -51,5 +61,8 @@ public class WebSecurityConfig {
                 return PasswordEncoderFactories.createDelegatingPasswordEncoder();
         }
 
-
+        @Bean
+        public JwtDecoder jwtDecoder() {
+                return new CustomJwtDecoder();
+        }
 }

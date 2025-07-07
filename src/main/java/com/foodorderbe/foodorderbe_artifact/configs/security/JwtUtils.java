@@ -24,11 +24,14 @@ public class JwtUtils {
 
     public static String generateJwtToken(Authentication authentication) {
         User userPrincipal = (User) authentication.getPrincipal();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, jwtExpiration);
 
         return Jwts.builder()
                 .subject((userPrincipal.getUsername()))
                 .issuedAt(new Date())
-                .expiration(new Date((Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + jwtExpiration)))
+                .claim("scope", userPrincipal.getAuthorities())
+                .expiration(calendar.getTime())
                 .signWith(getSigningKey())
                 .compact();
     }

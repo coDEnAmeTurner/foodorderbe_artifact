@@ -1,9 +1,9 @@
 package com.foodorderbe.foodorderbe_artifact.entities;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.foodorderbe.foodorderbe_artifact.constraints.annotations.CheckUserType;
+import com.foodorderbe.foodorderbe_artifact.constraints.constraint_utils.UserTypeAuthority;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,47 +31,48 @@ public class User implements UserDetails {
     private Long id;
 
     @JsonIgnore
-    @Column(name="password", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "lastLogin", nullable = true)
     private Date lastLogin;
 
-    @Column(name = "isSuperUser",nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Column(name = "isSuperUser", nullable = false, columnDefinition = "tinyint(1) default 0")
     private boolean isSuperUser;
 
-    @Column(name = "userName",nullable = false, unique = true)
+    @Column(name = "userName", nullable = false, unique = true)
     private String userName;
-    
-    @Column(name = "firstName",nullable = false, columnDefinition = "varchar(150) default ''")
+
+    @Column(name = "firstName", nullable = false, columnDefinition = "varchar(150) default ''")
     private String firstName;
 
-    @Column(name = "lastName",nullable = false, columnDefinition = "varchar(150) default ''")
+    @Column(name = "lastName", nullable = false, columnDefinition = "varchar(150) default ''")
     private String lastName;
 
-    @Column(name = "email",nullable = true, columnDefinition = "text")
+    @Column(name = "email", nullable = true, columnDefinition = "text")
     private String email;
 
-    @Column(name = "isStaff",nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Column(name = "isStaff", nullable = false, columnDefinition = "tinyint(1) default 0")
     private boolean isStaff;
 
-    @Column(name = "isActive",nullable = false, columnDefinition = "tinyint(1) default 0")
+    @Column(name = "isActive", nullable = false, columnDefinition = "tinyint(1) default 0")
     private boolean isActive;
 
     @CreationTimestamp
     @Column(name = "dateJoined", nullable = false)
     private Date dateJoined;
 
-    @Column(name = "avatar",nullable = true, columnDefinition = "text")
+    @Column(name = "avatar", nullable = true, columnDefinition = "text")
     private String avatar;
 
-    @Column(name = "name",nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "phone",nullable = true)
+    @Column(name = "phone", nullable = true)
     private String phone;
 
-    @Column(name = "type",nullable = false, columnDefinition = "varchar(10) default 'INDIVIDUAL'")
+    @CheckUserType({ UserTypeAuthority.INDIVIDUAL, UserTypeAuthority.ADMIN, UserTypeAuthority.SHOP })
+    @Column(name = "type", nullable = false, columnDefinition = "varchar(10) default 'INDIVIDUAL'")
     private String type;
 
     @CreationTimestamp
@@ -97,7 +100,7 @@ public class User implements UserDetails {
 
     public User(Long id, String password, Date lastLogin, boolean isSuperUser, String userName, String firstName,
             String lastName, String email, boolean isStaff, boolean isActive, Date dateJoined, String avatar,
-            String name, String phone, String type, Date dateCreated, Date dateModified,MultipartFile file) {
+            String name, String phone, String type, Date dateCreated, Date dateModified, MultipartFile file) {
         this.id = id;
         this.password = password;
         this.lastLogin = lastLogin;
@@ -256,10 +259,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Authority authority = new Authority(getType());
-        var list = new ArrayList<GrantedAuthority>();
-        list.add(authority);
-        return list;
+        return List.of(() -> this.getType().toUpperCase());
     }
 
     @Override

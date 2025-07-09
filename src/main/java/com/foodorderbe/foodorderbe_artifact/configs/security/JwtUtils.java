@@ -30,7 +30,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .subject((userPrincipal.getUsername()))
                 .issuedAt(new Date())
-                .claim("scope", userPrincipal.getAuthorities())
+                .claim("scope", userPrincipal.getAuthorities().stream().map(authority -> authority.getAuthority()).toList())
                 .expiration(calendar.getTime())
                 .signWith(getSigningKey())
                 .compact();

@@ -19,6 +19,7 @@ import com.foodorderbe.foodorderbe_artifact.entities.Dish;
 import com.foodorderbe.foodorderbe_artifact.entities.User;
 import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.CommentRepository;
 import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.DishRepository;
+import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.ShopRepository;
 import com.foodorderbe.foodorderbe_artifact.services.service_interfaces.DishService;
 import com.foodorderbe.foodorderbe_artifact.specifications.CommentSpecs;
 import com.foodorderbe.foodorderbe_artifact.specifications.DishSpecs;
@@ -27,6 +28,8 @@ import com.foodorderbe.foodorderbe_artifact.specifications.DishSpecs;
 public class DishServiceImpl implements DishService {
     @Autowired
     private DishRepository dishRepository;
+    @Autowired
+    private ShopRepository shopRepository;
     @Autowired
     private CommentRepository commentRepository;
     @Autowired
@@ -46,8 +49,7 @@ public class DishServiceImpl implements DishService {
                         .and(DishSpecs.containsName(name))
                         .and(DishSpecs.fromToPrice(fromPrice, toPrice))
                         .and(DishSpecs.isAvailable(available))
-                        .and(DishSpecs.equalsDaySession(daySession))
-                        );
+                        .and(DishSpecs.equalsDaySession(daySession)));
     }
 
     @Override
@@ -72,17 +74,24 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public Dish createOrUpdateDish(Long dishId, String description, String daySession, boolean isAvailable, float price,
-            String name, MultipartFile file) {
-        var opDish = dishRepository.findById(dishId);
-        if (!opDish.isPresent())
-            return null;
+            String name, MultipartFile file, long shopId) {
+        Dish d;
+        if (dishId == null || dishId <= 0) {
+            // Create new dish
+            d = new Dish();
+        } else {
+            var opDish = dishRepository.findById(dishId);
+            if (!opDish.isPresent())
+                return null;
+            d = opDish.get();
+        }
 
-        var d = opDish.get();
         d.setAvailable(isAvailable);
         d.setDaySession(daySession);
         d.setDescription(description);
         d.setName(name);
         d.setPrice(price);
+        d.setShop(shopId > 0 ? shopRepository.findById(shopId).get() : null);
 
         if (!file.isEmpty()) {
             try {

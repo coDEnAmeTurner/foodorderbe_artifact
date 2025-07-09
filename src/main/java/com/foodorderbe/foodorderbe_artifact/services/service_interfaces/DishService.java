@@ -30,7 +30,8 @@ public interface DishService {
                         boolean isAvailable,
                         float price,
                         String name,
-                        MultipartFile file);
+                        MultipartFile file,
+                        long shopId);
 
         List<Comment> getComments(Long dishId);
 }

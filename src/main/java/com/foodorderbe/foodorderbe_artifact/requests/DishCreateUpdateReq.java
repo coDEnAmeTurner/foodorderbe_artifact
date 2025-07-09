@@ -1,12 +1,20 @@
 package com.foodorderbe.foodorderbe_artifact.requests;
 
-public class DishUpdateReq {
+public class DishCreateUpdateReq {
     private String description;
     private String daySession;
-    private boolean isAvailable;
+    private boolean available;
     private float price;
     private String name;
+    private long shopId;
 
+    public long getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(long shopId) {
+        this.shopId = shopId;
+    }
 
     public String getDescription() {
         return description;
@@ -25,11 +33,11 @@ public class DishUpdateReq {
     }
 
     public boolean isAvailable() {
-        return isAvailable;
+        return available;
     }
 
     public void setAvailable(boolean isAvailable) {
-        this.isAvailable = isAvailable;
+        this.available = isAvailable;
     }
 
     public float getPrice() {
@@ -48,16 +56,17 @@ public class DishUpdateReq {
         this.name = name;
     }
 
-    public DishUpdateReq() {
+    public DishCreateUpdateReq() {
     }
 
-    public DishUpdateReq(String description, String daySession, boolean isAvailable, float price,
-            String name) {
+    public DishCreateUpdateReq(String description, String daySession, boolean isAvailable, float price,
+            String name, int shopId) {
         this.description = description;
         this.daySession = daySession;
-        this.isAvailable = isAvailable;
+        this.available = isAvailable;
         this.price = price;
         this.name = name;
+        this.shopId = shopId;
     }
 
 }

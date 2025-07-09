@@ -29,7 +29,7 @@ import com.foodorderbe.foodorderbe_artifact.entities.Comment;
 import com.foodorderbe.foodorderbe_artifact.entities.Dish;
 import com.foodorderbe.foodorderbe_artifact.entities.User;
 import com.foodorderbe.foodorderbe_artifact.requests.DishGetAllReq;
-import com.foodorderbe.foodorderbe_artifact.requests.DishUpdateReq;
+import com.foodorderbe.foodorderbe_artifact.requests.DishCreateUpdateReq;
 import com.foodorderbe.foodorderbe_artifact.services.service_implements.DishServiceImpl;
 
 @RestController
@@ -80,14 +80,16 @@ public class DishController {
     @ResponseStatus(HttpStatus.CREATED)
     @CrossOrigin
     public ResponseEntity<Dish> createOrUpdateDish(@PathVariable(name = "id", required = false) Long dishId,
-            @RequestPart(name = "req") DishUpdateReq req, @RequestPart(name = "file") MultipartFile[] file) {
+            @RequestPart(name = "req") DishCreateUpdateReq req, @RequestPart(name = "file") MultipartFile[] file) {
         var dish = dishService.createOrUpdateDish(dishId,
                 req.getDescription(),
                 req.getDaySession(),
                 req.isAvailable(),
                 req.getPrice(),
                 req.getName(),
-                file[0]);
+                file[0],
+                req.getShopId()
+                );
         return new ResponseEntity<>(dish, HttpStatus.CREATED);
     }
 

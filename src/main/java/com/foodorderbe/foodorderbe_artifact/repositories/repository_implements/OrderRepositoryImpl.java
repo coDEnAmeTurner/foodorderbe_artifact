@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 import com.foodorderbe.foodorderbe_artifact.entities.Dish;
 import com.foodorderbe.foodorderbe_artifact.entities.Order;
 import com.foodorderbe.foodorderbe_artifact.entities.OrderDish;
-import com.foodorderbe.foodorderbe_artifact.entities.OrderDish_;
-import com.foodorderbe.foodorderbe_artifact.entities.Order_;
 import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.custom_repositories.CustomOrderRepository;
 
 import jakarta.persistence.criteria.Join;

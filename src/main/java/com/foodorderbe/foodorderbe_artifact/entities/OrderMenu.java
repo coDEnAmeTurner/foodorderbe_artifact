@@ -13,7 +13,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "`orderMenu`")
 public class OrderMenu implements Serializable {
@@ -45,75 +53,6 @@ public class OrderMenu implements Serializable {
     @Column(name = "dateModified", nullable = false)
     private Date dateModified;
 
-    public OrderMenuKey getId() {
-        return id;
-    }
-
-    public void setId(OrderMenuKey id) {
-        this.id = id;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
-    public Menu getMenu() {
-        return menu;
-    }
-
-    public void setMenu(Menu menu) {
-        this.menu = menu;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public String getSideNote() {
-        return sideNote;
-    }
-
-    public void setSideNote(String sideNote) {
-        this.sideNote = sideNote;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getDateModified() {
-        return dateModified;
-    }
-
-    public void setDateModified(Date dateModified) {
-        this.dateModified = dateModified;
-    }
-
-    public OrderMenu() {
-    }
-
-    public OrderMenu(OrderMenuKey id, Order order, Menu menu, int count, String sideNote, Date dateCreated,
-            Date dateModified) {
-        this.id = id;
-        this.order = order;
-        this.menu = menu;
-        this.count = count;
-        this.sideNote = sideNote;
-        this.dateCreated = dateCreated;
-        this.dateModified = dateModified;
-    }
 
     
 }

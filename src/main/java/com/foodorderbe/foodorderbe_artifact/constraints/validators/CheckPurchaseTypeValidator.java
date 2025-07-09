@@ -16,13 +16,7 @@ public class CheckPurchaseTypeValidator implements ConstraintValidator<CheckPurc
             if (purchaseType2.name().equals(arg0))
                 isValid = true;
         }
-        if ( !isValid ) {
-            arg1.disableDefaultConstraintViolation();
-            arg1.buildConstraintViolationWithTemplate(
-                    "{com.foodorderbe.foodorderbe_artifact.constraints.annotations."
-                            + "constraintvalidatorcontext.CheckPurchaseType.message}"
-            ).addConstraintViolation();
-        }
+        
         return isValid;
     }
 

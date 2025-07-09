@@ -5,12 +5,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.apache.http.protocol.ResponseServer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
-
 import com.foodorderbe.foodorderbe_artifact.entities.Order;
 import com.foodorderbe.foodorderbe_artifact.entities.User;
 import com.foodorderbe.foodorderbe_artifact.exceptions.OrderNotFoundException;
@@ -34,7 +29,6 @@ import com.foodorderbe.foodorderbe_artifact.services.service_interfaces.OrderSer
 import com.foodorderbe.foodorderbe_artifact.services.service_interfaces.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -66,7 +60,8 @@ public class OrderController {
         var resp = new ResponseEntity<Map<String,String>>(map,HttpStatus.BAD_REQUEST);
 
         if (ex instanceof MethodArgumentNotValidException) {
-            map.put("msg", ex.getMessage());
+            var errors = ((MethodArgumentNotValidException)ex).getAllErrors();
+            map.put("msg", errors.get(errors.size() - 1).getDefaultMessage());
             return resp;
         }
         map.put("msg","Your request is tampered!");

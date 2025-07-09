@@ -4,7 +4,17 @@ import java.io.Serializable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@EqualsAndHashCode
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
 public class OrderDishKey implements Serializable {
     @Column(name = "orderId")
@@ -13,29 +23,6 @@ public class OrderDishKey implements Serializable {
     @Column(name = "dishId")
     private Long dishId;
 
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
-    public Long getDishId() {
-        return dishId;
-    }
-
-    public void setDishId(Long dishId) {
-        this.dishId = dishId;
-    }
-
-    public OrderDishKey() {
-    }
-
-    public OrderDishKey(Long orderId, Long dishId) {
-        this.orderId = orderId;
-        this.dishId = dishId;
-    }
 
     
 }

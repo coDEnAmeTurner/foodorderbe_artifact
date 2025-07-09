@@ -22,7 +22,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "`order`")
 public class Order implements Serializable {
@@ -62,102 +70,6 @@ public class Order implements Serializable {
 
     @Column(name = "shipPayment", nullable = true)
     private float shipPayment;
-
-    public float getShipPayment() {
-        return shipPayment;
-    }
-
-    public void setShipPayment(float shipPayment) {
-        this.shipPayment = shipPayment;
-    }
-
-    public Set<OrderDish> getOrderDishs() {
-        return orderDishs;
-    }
-
-    public void setOrderDishs(Set<OrderDish> orderDishs) {
-        this.orderDishs = orderDishs;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public boolean isValid() {
-        return isValid;
-    }
-
-    public void setValid(boolean isValid) {
-        this.isValid = isValid;
-    }
-
-    public String getPaymentType() {
-        return paymentType;
-    }
-
-    public void setPaymentType(String paymentType) {
-        this.paymentType = paymentType;
-    }
-
-    public float getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(float totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public String getShipAddress() {
-        return shipAddress;
-    }
-
-    public void setShipAddress(String shipAddress) {
-        this.shipAddress = shipAddress;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getDateModified() {
-        return dateModified;
-    }
-
-    public void setDateModified(Date dateModified) {
-        this.dateModified = dateModified;
-    }
-
-    public Order(Long id, User user, boolean isValid, String paymentType, float totalPrice, String shipAddress,
-            Date dateCreated, Date dateModified, float shipPayment) {
-        this.id = id;
-        this.user = user;
-        this.isValid = isValid;
-        this.paymentType = paymentType;
-        this.totalPrice = totalPrice;
-        this.shipAddress = shipAddress;
-        this.dateCreated = dateCreated;
-        this.dateModified = dateModified;
-        this.shipPayment = shipPayment;
-    }
-
-    public Order() {
-    }
 
     
 }

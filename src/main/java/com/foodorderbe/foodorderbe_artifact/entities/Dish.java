@@ -19,7 +19,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "`dish`")
 public class Dish implements Serializable {
@@ -62,104 +70,7 @@ public class Dish implements Serializable {
     @OneToMany(mappedBy = "dish")
     private Set<Comment> comments;
 
-    public long getId() {
-        return id;
-    }
-
-   public Shop getShop() {
-       return shop;
-   }
-
-    public String getName() {
-        return name;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public String getDaySession() {
-        return daySession;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public Date getDateModified() {
-        return dateModified;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-   public void setShop(Shop shop) {
-       this.shop = shop;
-   }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    public void setDaySession(String daySession) {
-        this.daySession = daySession;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public void setDateModified(Date dateModified) {
-        this.dateModified = dateModified;
-    }
-
-    public Dish() {
-    }
-
-    public Dish(long id, 
-   Shop shop,
-    String name, float price, String picture, boolean available, String daySession,
-            String description, Date dateCreated, Date dateModified) {
-        this.id = id;
-       this.shop = shop;
-        this.name = name;
-        this.price = price;
-        this.picture = picture;
-        this.available = available;
-        this.daySession = daySession;
-        this.description = description;
-        this.dateCreated = dateCreated;
-        this.dateModified = dateModified;
-    }
+    
 
     
 }

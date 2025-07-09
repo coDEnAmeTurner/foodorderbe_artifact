@@ -9,12 +9,19 @@ import org.hibernate.annotations.UpdateTimestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "`menuDish`")
 public class MenuDish implements Serializable {
@@ -42,64 +49,5 @@ public class MenuDish implements Serializable {
     @Column(name = "dateModified", nullable = false)
     private Date dateModified;
 
-    public MenuDishKey getId() {
-        return id;
-    }
-
-    public void setId(MenuDishKey id) {
-        this.id = id;
-    }
-
-    public Menu getMenu() {
-        return menu;
-    }
-
-    public void setMenu(Menu menu) {
-        this.menu = menu;
-    }
-
-    public Dish getDish() {
-        return dish;
-    }
-
-    public void setDish(Dish dish) {
-        this.dish = dish;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getDateModified() {
-        return dateModified;
-    }
-
-    public void setDateModified(Date dateModified) {
-        this.dateModified = dateModified;
-    }
-
-    public MenuDish() {
-    }
-
-    public MenuDish(MenuDishKey id, Menu menu, Dish dish, int count, Date dateCreated, Date dateModified) {
-        this.id = id;
-        this.menu = menu;
-        this.dish = dish;
-        this.count = count;
-        this.dateCreated = dateCreated;
-        this.dateModified = dateModified;
-    }
 
 }

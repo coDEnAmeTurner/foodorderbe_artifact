@@ -1,25 +1,17 @@
 package com.foodorderbe.foodorderbe_artifact.requests;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class DishMenuCreateReq {
     private Long dishId = 0L;
     private int count = 0;
-    public Long getDishId() {
-        return dishId;
-    }
-    public void setDishId(Long dishId) {
-        this.dishId = dishId;
-    }
-    public int getCount() {
-        return count;
-    }
-    public void setCount(int count) {
-        this.count = count;
-    }
-    public DishMenuCreateReq() {
-    }
-    public DishMenuCreateReq(Long dishId, int count) {
-        this.dishId = dishId;
-        this.count = count;
-    }
+    
     
 }

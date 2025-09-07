@@ -32,6 +32,7 @@ public class WebSecurityConfig {
                                 .cors(cors -> cors.disable())
                                 .authorizeHttpRequests((authorize) -> authorize
                                                 .requestMatchers("/Users/login").permitAll()
+                                                .requestMatchers("/Users/WithObj/*").permitAll()
                                                 .requestMatchers("/error/**").hasAuthority("ROLE_ANONYMOUS")
                                                 .requestMatchers("/**").hasAuthority("SCOPE_ADMIN")
                                                 .anyRequest().authenticated())

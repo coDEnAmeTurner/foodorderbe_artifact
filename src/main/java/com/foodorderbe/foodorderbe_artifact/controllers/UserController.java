@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +23,10 @@ import javax.naming.AuthenticationException;
 
 import java.text.ParseException;
 
+import com.cloudinary.api.exceptions.NotFound;
 import com.foodorderbe.foodorderbe_artifact.entities.User;
 import com.foodorderbe.foodorderbe_artifact.requests.LoginRequest;
-import com.foodorderbe.foodorderbe_artifact.requests.UserCreateReq;
+import com.foodorderbe.foodorderbe_artifact.requests.UserCreateUpdateReq;
 import com.foodorderbe.foodorderbe_artifact.responses.LoginResp;
 import com.foodorderbe.foodorderbe_artifact.services.service_interfaces.LoginService;
 import com.foodorderbe.foodorderbe_artifact.services.service_interfaces.UserService;
@@ -89,7 +92,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @CrossOrigin
     //use @RequestBody if theres no file
-    public ResponseEntity<User> createWithObj(@RequestPart(value = "req") UserCreateReq req, 
+    public ResponseEntity<User> createWithObj(@RequestPart(value = "req") UserCreateUpdateReq req, 
     @RequestPart(value = "file") MultipartFile[] file)
             throws ParseException {
                 var u = userService.createUser(
@@ -103,5 +106,42 @@ public class UserController {
                         req.getName(),
                         file[0]);
                 return new ResponseEntity<>(u,HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "/WithObj/{id}", consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE
+    }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin
+    //use @RequestBody if theres no file
+    public ResponseEntity<User> updateWithObj(@PathVariable(value="id") Long id, @RequestPart(value = "req") UserCreateUpdateReq req, 
+    @RequestPart(value = "file") MultipartFile[] file)
+            throws ParseException, NotFound {
+                var u = userService.updateUser(
+                        id,
+                        req.getPassword(),
+                        req.getEmail(),
+                        req.getLastName(),
+                        req.getFirstName(),
+                        req.getUserName(),
+                        req.getType(),
+                        req.getPhone(),
+                        req.getName(),
+                        file[0]);
+                return new ResponseEntity<>(u,HttpStatus.OK);
+    }
+
+    @PatchMapping(path = "/WithObj/{id}", consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+    }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    @CrossOrigin
+    public ResponseEntity<User> updatePass(@RequestParam Map<String, String> params, @PathVariable(value="id") Long id)
+            throws ParseException, NotFound {
+                var u = userService.updatePass(
+                        id,
+                        params.get("password"));
+                return new ResponseEntity<>(u,HttpStatus.OK);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.api.exceptions.NotFound;
 import com.cloudinary.utils.ObjectUtils;
 import com.foodorderbe.foodorderbe_artifact.entities.User;
 import com.foodorderbe.foodorderbe_artifact.repositories.repository_interfaces.UserRepository;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
             String type, String phone, String name,
             MultipartFile file) {
         User u = new User();
-        //set up spring security for password encoder
+        // set up spring security for password encoder
         u.setPassword(encoder.encode(password));
         u.setEmail(email);
         u.setLastName(lastName);
@@ -41,10 +42,11 @@ public class UserServiceImpl implements UserService {
         u.setType(type);
         u.setPhone(phone);
         u.setName(name);
-        
-        if (!file.isEmpty()){
+
+        if (!file.isEmpty()) {
             try {
-                Map res = this.cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                Map res = this.cloudinary.uploader().upload(file.getBytes(),
+                        ObjectUtils.asMap("resource_type", "auto"));
                 u.setAvatar(res.get("secure_url").toString());
             } catch (IOException ex) {
                 Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,12 +64,65 @@ public class UserServiceImpl implements UserService {
         if (u == null) {
             throw new UsernameNotFoundException("Invalid username!");
         }
-        
+
         return u;
     }
 
     @Override
     public User getUser(Long userId) {
         return userRepository.findById(userId).get();
+    }
+
+    @Override
+    public User updateUser(Long id, String password, String email, String lastName, String firstName, String userName,
+            String type, String phone, String name, MultipartFile file) throws NotFound {
+        var uopt = userRepository.findById(id);
+        if (!uopt.isPresent())
+            throw new NotFound(String.format("User with Id: %d not found!", id));
+        var u = uopt.get();
+
+        // set up spring security for password encoder
+        if (password != null)
+            u.setPassword(encoder.encode(password));
+        if (email != null)
+            u.setEmail(email);
+        if (lastName != null)
+            u.setLastName(lastName);
+        if (firstName != null)
+            u.setFirstName(firstName);
+        if (userName != null)
+            u.setUserName(userName);
+        if (type != null)
+            u.setType(type);
+        if (phone != null)
+            u.setPhone(phone);
+        if (name != null)
+            u.setName(name);
+
+        if (!file.isEmpty()) {
+            try {
+                Map res = this.cloudinary.uploader().upload(file.getBytes(),
+                        ObjectUtils.asMap("resource_type", "auto"));
+                u.setAvatar(res.get("secure_url").toString());
+            } catch (IOException ex) {
+                Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        userRepository.save(u);
+
+        return u;
+    }
+
+    @Override
+    public User updatePass(Long id, String password) throws NotFound {
+        var uopt = userRepository.findById(id);
+        if (!uopt.isPresent())
+            throw new NotFound(String.format("User with Id: %d not found!", id));
+        var u = uopt.get();
+        u.setPassword(encoder.encode(password));
+        userRepository.save(u);
+
+        return u;
     }
 }
